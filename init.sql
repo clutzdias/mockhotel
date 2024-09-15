@@ -60,7 +60,7 @@ CREATE TABLE reservas_quartos(
     ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-CREATE TABLE cancelamentosreservas (
+CREATE TABLE cancelamentos_reservas (
   cancelamentoreserva uuid NOT NULL DEFAULT uuid_generate_V4(),
   reserva uuid NOT NULL,
   motivo TEXT,

@@ -67,6 +67,34 @@ class AbstractRepository:
       pass
 
     return cursor
+  
+  def __executeMany(self, sql: str, params: List[dict]):
+    from sqlparams import SQLParams
+
+    if len(params) == 0:
+      raise Exception('Sem dados para inserir')
+    
+    params_execucao = []
+
+    sql2 = ''
+
+    for i in range(len(params)):
+      parametro = params[i]
+
+      if not isinstance(parametro, dict):
+        parametro = parametro.__dict__
+      
+      sql2,params2 = SQLParams('named', 'format').format(sql, parametro)
+
+      params_execucao.append(tuple(params2))
+    try:
+      cursor = self.connection.cursor()
+      cursor.executemany(sql2, params_execucao)
+    except Exception as e:
+      #Adicionar log de erro
+      pass
+
+    return cursor
 
   def execute(self, sql: str, params: dict):
     try:
@@ -75,6 +103,11 @@ class AbstractRepository:
     finally:
       if cursor != None:
         cursor.close()
+
+  def executeMany(self, sql: str, params: List[dict]):
+    cursor = self.__executeMany(sql, params)
+    if cursor != None:
+      cursor.close()
 
   def fetchAll(self, sql: str, params: dict) -> List[dict]:
     try:
