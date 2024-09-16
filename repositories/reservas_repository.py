@@ -42,6 +42,9 @@ class ReservasRepository(AbstractRepository):
 
     self.execute(sql, params)
 
+    if cancelamento_reserva.nova_reserva is not None:
+      self.inserir_reserva(cancelamento_reserva.nova_reserva )
+
   def consulta_reservas_por_usuario(self, id_usuario):
 
     sql = """SELECT 
@@ -96,6 +99,14 @@ class ReservasRepository(AbstractRepository):
       params2 = [{'reserva': reserva.reserva, 'quarto': quarto.id} for quarto in reserva.quartos]
 
       self.executeMany(sql, params2)
+  
+  def verifica_reserva_valida(self, id_reserva):
+
+    sql = "SELECT reserva FROM reservas where reserva = :id_reserva"
+
+    params = {"id_reserva": id_reserva}
+
+    return self.fetchOne(sql, params)
 
 
        

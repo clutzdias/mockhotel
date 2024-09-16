@@ -7,7 +7,8 @@ from reserva import Reserva
 
 class CancelamentoReserva(BaseModel):
   cancelamentoreserva: Optional[UUID]
-  reserva: Reserva
+  reserva: UUID
   motivo: str
-  data_cancelamento: datetime
+  data_cancelamento: datetime = datetime.now()
   gerou_nova_reserva: bool
+  nova_reserva: Optional[Reserva]

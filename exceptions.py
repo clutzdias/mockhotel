@@ -12,6 +12,12 @@ class ExcecaoManual(Exception):
       }
     return {"erro": self.mensagem}
 
+class ReservaInvalida(ExcecaoManual):
+  pass
+
+class QuartosInsuficientesParaReserva(ExcecaoManual):
+  pass
+
 class QuartosIndisponiveisPorPeriodoException(ExcecaoManual):
   pass
 
