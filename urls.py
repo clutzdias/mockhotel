@@ -1,8 +1,8 @@
-from flask import BluePrint, request
+from flask import Blueprint, request
 
-from views.reservas_view import ReservasView
+from mockhotel.views.reservas_view import ReservasView
 
-blue_print = BluePrint('main', __name__)
+blue_print = Blueprint('main', __name__)
 
 @blue_print.route('/reservas', methods=['GET', 'POST'])
 def reservas():

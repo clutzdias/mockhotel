@@ -3,7 +3,7 @@ from uuid import UUID
 from typing import Optional
 from datetime import datetime
 
-from reserva import Reserva
+from mockhotel.classes.reserva import Reserva
 
 class CancelamentoReserva(BaseModel):
   cancelamentoreserva: Optional[UUID]

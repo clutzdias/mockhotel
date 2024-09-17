@@ -1,10 +1,10 @@
 import utilitarios
+import mockhotel.exceptions as Exceptions
 
-from repositories.reservas_repository import ReservasRepository
-from exceptions import QuartosIndisponiveisPorPeriodo, ReservaInvalida, QuartosInsuficientesParaReserva, CancelamentoReservaInvalido, ExcecaoManual, AlteracaoReservaInvalida
-from classes.quarto import Quarto
-from classes.reserva import Reserva
-from classes.cancelamento_reserva import CancelamentoReserva
+from mockhotel.repositories.reservas_repository import ReservasRepository
+from mockhotel.classes.quarto import Quarto
+from mockhotel.classes.reserva import Reserva
+from mockhotel.classes.cancelamento_reserva import CancelamentoReserva
 
 class ReservaService:
     
@@ -13,10 +13,10 @@ class ReservaService:
   
   def fazer_reserva(self, dados):
     if dados is None or len(dados) == 0:
-      raise ReservaInvalida("Não foram informados dados para a reserva.")
+      raise Exceptions.ReservaInvalida("Não foram informados dados para a reserva.")
     
     if "quartos" not in dados or len(dados["quartos"]) == 0:
-      raise ReservaInvalida("Não foram selecionados quartos para a reserva.")
+      raise Exceptions.ReservaInvalida("Não foram selecionados quartos para a reserva.")
     
     quartos = []
     quantidade_leitos = 0
@@ -33,7 +33,7 @@ class ReservaService:
       quartos.append(quarto)
 
     if quantidade_leitos < dados['quantidade_pessoas']:
-      raise QuartosInsuficientesParaReserva('A quantidade de leitos disponíveis nos quartos informados' + 
+      raise Exceptions.QuartosInsuficientesParaReserva('A quantidade de leitos disponíveis nos quartos informados' + 
                                             'é inferior à quantidade de pessoas da reserva.')
 
     try:
@@ -48,15 +48,15 @@ class ReservaService:
       self.repository.inserir_reserva(reserva)
 
     except Exception as e:
-      raise ExcecaoManual("Falha ao efetuar a reserva", e)
+      raise Exceptions.ExcecaoManual("Falha ao efetuar a reserva", e)
 
     return reserva
 
   def cancelar_reserva(self, dados):
     if dados is None or len(dados) == 0:
-      raise CancelamentoReservaInvalido("Não foram informados dados para o cancelamento")
+      raise Exceptions.CancelamentoReservaInvalido("Não foram informados dados para o cancelamento")
     elif "reserva" not in dados or dados["reserva"] is None:
-      raise CancelamentoReservaInvalido("Não foi informada uma reserva para o cancelamento")
+      raise Exceptions.CancelamentoReservaInvalido("Não foi informada uma reserva para o cancelamento")
     
     try:
       cancelamento_reserva = CancelamentoReserva(reserva=dados["reserva"],
@@ -65,20 +65,20 @@ class ReservaService:
                                                  nova_reserva=dados["nova_reserva"])
       self.repository.cancelar_reserva(cancelamento_reserva)
     except Exception as e:
-      raise ExcecaoManual('Falha ao efetuar o cancelamento da reserva.', e)
+      raise Exceptions.ExcecaoManual('Falha ao efetuar o cancelamento da reserva.', e)
     
     return cancelamento_reserva
 
   def alterar_reserva(self, dados):
     if dados is None or len(dados) == 0:
-      raise AlteracaoReservaInvalida("Não foram informados dados para fazer a alteracao da reserva.")
+      raise Exceptions.AlteracaoReservaInvalida("Não foram informados dados para fazer a alteracao da reserva.")
     elif "reserva" not in dados or dados["reserva"] is None:
-      raise AlteracaoReservaInvalida("Não foi informada uma reserva para alteração")
+      raise Exceptions.AlteracaoReservaInvalida("Não foi informada uma reserva para alteração")
     
     id_reserva = self.repository.verifica_reserva_valida(dados["reserva"])
 
     if id_reserva is None:
-      raise AlteracaoReservaInvalida("Não foi encontrada uma reserva registrada para o parâmetro informado", dados["reserva"])
+      raise Exceptions.AlteracaoReservaInvalida("Não foi encontrada uma reserva registrada para o parâmetro informado", dados["reserva"])
     
     lista_quartos_alterados = []
     alteracao_quartos = False
@@ -106,7 +106,7 @@ class ReservaService:
       
       self.repository.alterar_reserva(reserva, alteracao_quartos)
     except Exception as e:
-      raise ExcecaoManual("Falha ao efetuar a alteração da reserva", e)
+      raise Exceptions.ExcecaoManual("Falha ao efetuar a alteração da reserva", e)
     
     return reserva
 
@@ -119,7 +119,7 @@ class ReservaService:
 
     retorno = []
     if len(dados) == 0:
-      raise QuartosIndisponiveisPorPeriodo("Não foram encontrados quartos disponíveis para o período.", 
+      raise Exceptions.QuartosIndisponiveisPorPeriodo("Não foram encontrados quartos disponíveis para o período.", 
                                            f'Data de Início: {data_inicio}, Data final: {data_fim}')
 
     else:

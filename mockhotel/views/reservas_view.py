@@ -1,7 +1,7 @@
 from flask import request, jsonify
-from services.reservas_service import ReservaService
-from abstract_view import AbstractView
-from exceptions import ExcecaoManual
+from mockhotel.services.reservas_service import ReservaService
+from mockhotel.views.abstract_view import AbstractView
+from ..exceptions import ExcecaoManual
 
 class ReservasView(AbstractView):
 

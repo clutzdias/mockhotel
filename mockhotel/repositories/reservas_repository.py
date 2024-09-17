@@ -1,6 +1,6 @@
-from abstract_repository import AbstractRepository
-from classes.reserva import Reserva
-from classes.cancelamento_reserva import CancelamentoReserva
+from mockhotel.repositories.abstract_repository import AbstractRepository
+from mockhotel.classes.reserva import Reserva
+from mockhotel.classes.cancelamento_reserva import CancelamentoReserva
 
 class ReservasRepository(AbstractRepository):
 
