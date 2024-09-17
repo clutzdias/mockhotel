@@ -32,3 +32,5 @@ class QuantidadePessoasInvalida(ExcecaoManual):
 
 class ReservaJaEfetuadaException(ExcecaoManual):
   pass
+
+

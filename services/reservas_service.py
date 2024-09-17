@@ -66,6 +66,8 @@ class ReservaService:
       self.repository.cancelar_reserva(cancelamento_reserva)
     except Exception as e:
       raise ExcecaoManual('Falha ao efetuar o cancelamento da reserva.', e)
+    
+    return cancelamento_reserva
 
   def alterar_reserva(self, dados):
     if dados is None or len(dados) == 0:
@@ -105,6 +107,8 @@ class ReservaService:
       self.repository.alterar_reserva(reserva, alteracao_quartos)
     except Exception as e:
       raise ExcecaoManual("Falha ao efetuar a alteração da reserva", e)
+    
+    return reserva
 
   def consulta_quartos_disponiveis(self, hotel, data_inicio, data_fim):
     from repositories.quartos_repository import QuartosRepository
@@ -129,4 +133,8 @@ class ReservaService:
         retorno.append(quarto)
 
     return retorno
+  
+  def get_reservas_usuario(self, id_usuario):
+    return self.repository.consulta_reservas_por_usuario(id_usuario)
+
     

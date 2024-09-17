@@ -1,5 +1,6 @@
 import datetime
 
+
 def formataDataEntrada(data:str):
     data = datetime.datetime.strptime(data, "%Y-%m-%d")
     return data.strftime('%Y-%m-%d')
