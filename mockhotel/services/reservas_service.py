@@ -1,10 +1,12 @@
-import utilitarios
-import mockhotel.exceptions as Exceptions
+from datetime import datetime
+from uuid import UUID, uuid4
 
-from mockhotel.repositories.reservas_repository import ReservasRepository
-from mockhotel.classes.quarto import Quarto
-from mockhotel.classes.reserva import Reserva
-from mockhotel.classes.cancelamento_reserva import CancelamentoReserva
+import utilitarios
+import exceptions as Exceptions
+from repositories.reservas_repository import ReservasRepository
+from classes.quarto import Quarto
+from classes.reserva import Reserva
+from classes.cancelamento_reserva import CancelamentoReserva
 
 class ReservaService:
     
@@ -22,8 +24,8 @@ class ReservaService:
     quantidade_leitos = 0
 
     for dado in dados["quartos"]:
-      quarto = Quarto(quarto=dado["quarto"],
-                      hotel=dado["hotel"],
+      quarto = Quarto(quarto=UUID(dado["quarto"]),
+                      hotel=UUID(dado["hotel"]),
                       quantidade_acomodacoes=dado["quantidade_acomodacoes"],
                       tipo_acomodacoes=dado["tipo_acomodacoes"],
                       tipo_quarto=dado["tipo_quarto"])
@@ -37,18 +39,19 @@ class ReservaService:
                                             'é inferior à quantidade de pessoas da reserva.')
 
     try:
-      reserva = Reserva(quantidade_pessoas=dados["quantidade_pessoas"],
+      reserva = Reserva(reserva=uuid4(),
+                        quantidade_pessoas=dados["quantidade_pessoas"],
                         data_inicio=utilitarios.formataDataEntrada(dados["data_inicio"]),
                         data_fim=utilitarios.formataDataEntrada(dados["data_fim"]),
                         valor=dados["valor"],
-                        usuario=dados["usuario"],
+                        usuario=UUID(dados["usuario"]),
                         quartos=quartos
                         )
       
       self.repository.inserir_reserva(reserva)
 
     except Exception as e:
-      raise Exceptions.ExcecaoManual("Falha ao efetuar a reserva", e)
+      raise Exceptions.ExcecaoManual("Falha ao efetuar a reserva", e.errors())
 
     return reserva
 
@@ -61,8 +64,9 @@ class ReservaService:
     try:
       cancelamento_reserva = CancelamentoReserva(reserva=dados["reserva"],
                                                  motivo=dados["motivo"],
-                                                 gerou_nova_reserva=dados["nova_reserva"] is not None if "nova_reserva" in dados else False,
-                                                 nova_reserva=dados["nova_reserva"])
+                                                 data_cancelamento=utilitarios.formataDataEntrada(dados["data_cancelamento"]) if "data_cancelamento" in dados else datetime.now(),
+                                                 gerou_nova_reserva=(dados["nova_reserva"] is not None) if "nova_reserva" in dados else False,
+                                                 nova_reserva=dados["nova_reserva"] if "nova_reserva" in dados else None)
       self.repository.cancelar_reserva(cancelamento_reserva)
     except Exception as e:
       raise Exceptions.ExcecaoManual('Falha ao efetuar o cancelamento da reserva.', e)

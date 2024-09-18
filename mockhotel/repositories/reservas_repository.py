@@ -1,10 +1,10 @@
-from mockhotel.repositories.abstract_repository import AbstractRepository
-from mockhotel.classes.reserva import Reserva
-from mockhotel.classes.cancelamento_reserva import CancelamentoReserva
+from repositories.abstract_repository import AbstractRepository
+from classes.reserva import Reserva
+from classes.cancelamento_reserva import CancelamentoReserva
 
 class ReservasRepository(AbstractRepository):
 
-  def inserir_reserva(self, reserva: Reserva):
+  def inserir_reserva(self, reserva):
     sql = """INSERT INTO reservas (quantidade_pessoas, data_inicio, data_fim, valor, usuario)
         VALUES (:quantidade_pessoas, :data_inicio, :data_fim, :valor, :usuario)
         RETURNING reserva;"""

@@ -1,5 +1,6 @@
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 from mockhotel.services.reservas_service import ReservaService
+from mockhotel.repositories.reservas_repository import ReservasRepository
 from mockhotel.views.abstract_view import AbstractView
 from ..exceptions import ExcecaoManual
 
@@ -7,7 +8,7 @@ class ReservasView(AbstractView):
 
   def __init__(self):
     super().__init__()
-    self.service = ReservaService()
+    self.service = ReservaService(ReservasRepository())
 
   def post(self):
     try:
@@ -16,9 +17,11 @@ class ReservasView(AbstractView):
       reserva = self.service.fazer_reserva(body)
 
       retorno = jsonify(reserva.__dict__)
-      return self.tratar_resposta(retorno)
+      retorno = self.tratar_resposta(retorno)
+      return make_response(retorno, retorno["http_status"])
     except Exception as e:
-      return self.tratar_resposta([], e)
+      retorno = self.tratar_resposta([], e)
+      return make_response(retorno, retorno["http_status"])
  
   def get(self):
     try:
@@ -57,6 +60,6 @@ class ReservasView(AbstractView):
       reserva = self.service.cancelar_reserva(body)
 
       retorno = jsonify(reserva.__dict__)
-      return self.tratar_resposta(retorno)
+      retorno = self.tratar_resposta(retorno)
     except Exception as e:
-      return self.tratar_resposta([], e)
+      retorno = self.tratar_resposta([], e)

@@ -1,10 +1,10 @@
-import mockhotel.exceptions as Exceptions
 
 from mockhotel.repositories.abstract_repository import AbstractRepository
 
 class AbstractView:
   def __init__(self):
-    AbstractRepository.set_connection()
+    self.repository = AbstractRepository()
+    self.repository.set_connection()
 
   def post():
     pass
@@ -19,6 +19,7 @@ class AbstractView:
     pass
 
   def tratar_resposta(self, dados, excecao = None):
+    import mockhotel.exceptions as Exceptions
     if excecao is None:
       return {"http_status": 200,
               "dados": dados}
@@ -29,17 +30,15 @@ class AbstractView:
         or isinstance(excecao, Exceptions.ExcecaoManual)):
       return {"http_status": 400,
             "mensagem": excecao.mensagem,
-            "erro": excecao,
             "dados": dados}
     elif (isinstance(excecao, Exceptions.QuartosInsuficientesParaReserva)
         or isinstance(excecao, Exceptions.QuartosIndisponiveisPorPeriodo)):
       return {"http_status": 422,
             "mensagem": excecao.mensagem,
-            "erro": excecao,
             "dados": dados}
     else:
       return {"http_status": 500,
-            "erro": excecao,
+            "erro": 'Falha ao executar a operação.',
             "dados": dados}
 
     

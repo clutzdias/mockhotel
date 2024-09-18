@@ -4,7 +4,7 @@ from datetime import date
 from decimal import Decimal
 from typing import Optional, List
 
-from mockhotel.classes.quarto import Quarto
+from classes.quarto import Quarto
 
 class Reserva(BaseModel):
   reserva: Optional[UUID]

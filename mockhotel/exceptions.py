@@ -18,7 +18,7 @@ class ReservaInvalida(ExcecaoManual):
 class QuartosInsuficientesParaReserva(ExcecaoManual):
   pass
 
-class QuartosIndisponiveisPorPeriodoException(ExcecaoManual):
+class QuartosIndisponiveisPorPeriodo(ExcecaoManual):
   pass
 
 class AlteracaoReservaInvalida(ExcecaoManual):

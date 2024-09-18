@@ -7,3 +7,7 @@ def create_app():
     app.register_blueprint(blue_print)
 
     return app
+
+app = create_app()
+
+app.run(port=5001)
