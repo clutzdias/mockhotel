@@ -60,11 +60,15 @@ class AbstractRepository:
 
     try:
       sql2, params2 = SQLParams('named', 'format').format(sql, params)
-      cursor = self.connection.cursor()
+      if self.connection is None:
+        self.set_connection()
+      cursor = self.cursor
       cursor.execute(sql2,params2)
+      self.commit()
     except Exception as e:
+      self.rollback()
+      raise
       ##Colocar log de exceção
-      pass
 
     return cursor
   
@@ -88,10 +92,14 @@ class AbstractRepository:
 
       params_execucao.append(tuple(params2))
     try:
+      if self.connection is None:
+        self.set_connection()
       cursor = self.connection.cursor()
       cursor.executemany(sql2, params_execucao)
+      self.commit()
     except Exception as e:
       #Adicionar log de erro
+      self.rollback()
       pass
 
     return cursor

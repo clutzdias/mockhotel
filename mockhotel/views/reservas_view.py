@@ -16,12 +16,13 @@ class ReservasView(AbstractView):
 
       reserva = self.service.fazer_reserva(body)
 
-      retorno = jsonify(reserva.__dict__)
-      retorno = self.tratar_resposta(retorno)
+      #retorno = jsonify(reserva.model_dump())
+      retorno = self.tratar_resposta(reserva.model_dump())
       return make_response(retorno, retorno["http_status"])
     except Exception as e:
       retorno = self.tratar_resposta([], e)
       return make_response(retorno, retorno["http_status"])
+      #raise e
  
   def get(self):
     try:

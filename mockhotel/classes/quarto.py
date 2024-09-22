@@ -11,3 +11,6 @@ class Quarto(BaseModel):
   quantidade_acomodacoes: int
   tipo_acomodacoes: TipoAcomodacoes
   tipo_quarto: TipoQuarto
+
+  class Config:
+    use_enum_values = True

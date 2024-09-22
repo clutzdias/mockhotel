@@ -1,7 +1,8 @@
 bin/*
 include/*
 lib/*
-**/lib64/
+lib64
 pyvenv.cfg
 **/__pycache__/
 **/mockhotel.egg-info/
+.vscode/

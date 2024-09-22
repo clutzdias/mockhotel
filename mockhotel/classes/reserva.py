@@ -14,4 +14,7 @@ class Reserva(BaseModel):
   valor: Decimal
   usuario: UUID
   quartos: List[Quarto]
+
+  class Config:
+    use_enum_values = True
     

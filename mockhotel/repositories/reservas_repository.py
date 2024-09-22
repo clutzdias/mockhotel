@@ -6,19 +6,20 @@ class ReservasRepository(AbstractRepository):
 
   def inserir_reserva(self, reserva):
     sql = """INSERT INTO reservas (quantidade_pessoas, data_inicio, data_fim, valor, usuario)
-        VALUES (:quantidade_pessoas, :data_inicio, :data_fim, :valor, :usuario)
-        RETURNING reserva;"""
+        VALUES (:quantidade_pessoas, :data_inicio, :data_fim, :valor, :usuario);"""
     
     params = reserva.__dict__
 
-    dados = self.fetchOne(sql, params)
+    id_reserva = str(reserva.reserva)
+    params["reserva"] = id_reserva
+    params["usuario"] = str(reserva.usuario)
 
-    id_reserva = dados['id']
+    self.execute(sql, params)
 
     sql = """INSERT INTO reservas_quartos (reserva, quarto)
           VALUES (:reserva, :quarto);"""
     
-    params2 = [{'reserva': id_reserva, 'quarto': quarto.id} for quarto in reserva.quartos]
+    params2 = [{'reserva': id_reserva, 'quarto': str(quarto.quarto)} for quarto in reserva.quartos]
 
     self.executeMany(sql, params2)
   

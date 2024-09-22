@@ -51,7 +51,8 @@ class ReservaService:
       self.repository.inserir_reserva(reserva)
 
     except Exception as e:
-      raise Exceptions.ExcecaoManual("Falha ao efetuar a reserva", e.errors())
+      raise e
+      #raise Exceptions.ExcecaoManual("Falha ao efetuar a reserva", e.errors())
 
     return reserva
 

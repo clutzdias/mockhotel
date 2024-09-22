@@ -5,6 +5,7 @@ class AbstractView:
   def __init__(self):
     self.repository = AbstractRepository()
     self.repository.set_connection()
+    self.repository.begin()
 
   def post():
     pass
